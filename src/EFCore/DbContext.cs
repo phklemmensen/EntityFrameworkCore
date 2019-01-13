@@ -575,7 +575,9 @@ namespace Microsoft.EntityFrameworkCore
                 _changeTracker?.AutoDetectChangesEnabled,
                 _changeTracker?.QueryTrackingBehavior,
                 _database?.AutoTransactionsEnabled,
-                _changeTracker?.LazyLoadingEnabled);
+                _changeTracker?.LazyLoadingEnabled,
+                _changeTracker?.CascadeDeleteTiming,
+                _changeTracker?.DeleteOrphansTiming);
 
         void IDbContextPoolable.Resurrect(DbContextPoolConfigurationSnapshot configurationSnapshot)
         {
@@ -585,10 +587,14 @@ namespace Microsoft.EntityFrameworkCore
             {
                 Debug.Assert(configurationSnapshot.QueryTrackingBehavior.HasValue);
                 Debug.Assert(configurationSnapshot.LazyLoadingEnabled.HasValue);
+                Debug.Assert(configurationSnapshot.CascadeDeleteTiming.HasValue);
+                Debug.Assert(configurationSnapshot.DeleteOrphansTiming.HasValue);
 
                 ChangeTracker.AutoDetectChangesEnabled = configurationSnapshot.AutoDetectChangesEnabled.Value;
                 ChangeTracker.QueryTrackingBehavior = configurationSnapshot.QueryTrackingBehavior.Value;
                 ChangeTracker.LazyLoadingEnabled = configurationSnapshot.LazyLoadingEnabled.Value;
+                ChangeTracker.CascadeDeleteTiming = configurationSnapshot.CascadeDeleteTiming.Value;
+                ChangeTracker.DeleteOrphansTiming = configurationSnapshot.DeleteOrphansTiming.Value;
             }
             else
             {
