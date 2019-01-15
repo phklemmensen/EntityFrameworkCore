@@ -56,6 +56,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
         /// </summary>
         public virtual Expression CreateMaterializeExpression(
             IEntityType entityType,
+            string entityInstanceName,
             Expression materializationExpression,
             int[] indexMap = null)
         {
@@ -120,7 +121,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
                 return constructorExpression;
             }
 
-            var instanceVariable = Expression.Variable(constructorBinding.RuntimeType, "instance");
+            var instanceVariable = Expression.Variable(constructorBinding.RuntimeType, entityInstanceName);
 
             var blockExpressions
                 = new List<Expression>
@@ -181,7 +182,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Internal
                         = Expression.Parameter(typeof(MaterializationContext), "materializationContext");
 
                     return Expression.Lambda<Func<MaterializationContext, object>>(
-                            CreateMaterializeExpression(e, materializationContextParameter),
+                            CreateMaterializeExpression(e, "instance", materializationContextParameter),
                             materializationContextParameter)
                         .Compile();
                 });

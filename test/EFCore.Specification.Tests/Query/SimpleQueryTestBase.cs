@@ -1094,7 +1094,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                 asyncQuery: cs => cs.AllAsync(c1 => cs.Any(c2 => cs.Any(c3 => EF.Property<string>(c1, "CustomerID") == c3.CustomerID))));
         }
 
-        [ConditionalTheory]
+        [ConditionalTheory(Skip = "Using NotMapped property")]
         [MemberData(nameof(IsAsyncData))]
         public virtual Task All_client(bool isAsync)
         {
@@ -1104,7 +1104,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                 predicate: c => c.IsLondon);
         }
 
-        [ConditionalTheory]
+        [ConditionalTheory(Skip = "Using NotMapped property")]
         [MemberData(nameof(IsAsyncData))]
         public virtual Task All_client_and_server_top_level(bool isAsync)
         {
@@ -1114,7 +1114,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                 predicate: c => c.CustomerID != "Foo" && c.IsLondon);
         }
 
-        [ConditionalTheory]
+        [ConditionalTheory(Skip = "Using NotMapped property")]
         [MemberData(nameof(IsAsyncData))]
         public virtual Task All_client_or_server_top_level(bool isAsync)
         {
@@ -1239,7 +1239,7 @@ namespace Microsoft.EntityFrameworkCore.Query
                 cs => from c in cs.Cast<object>() select c, entryCount: 91);
         }
 
-        [ConditionalTheory]
+        [ConditionalTheory(Skip = "Client property")]
         [MemberData(nameof(IsAsyncData))]
         public virtual Task First_client_predicate(bool isAsync)
         {
@@ -3534,7 +3534,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             }
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "Deadlock")]
         public virtual void Throws_on_concurrent_query_list()
         {
             using (var context = CreateContext())
@@ -3570,7 +3570,7 @@ namespace Microsoft.EntityFrameworkCore.Query
             }
         }
 
-        [ConditionalFact]
+        [ConditionalFact(Skip = "Deadlock")]
         public virtual void Throws_on_concurrent_query_first()
         {
             using (var context = CreateContext())

@@ -8,6 +8,7 @@ using System.Threading;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
@@ -158,6 +159,13 @@ namespace Microsoft.EntityFrameworkCore.Query
             {
                 entityTrackingInfo.StartTracking(StateManager, entity, ValueBuffer.Empty);
             }
+        }
+
+        public virtual void StartTracking(
+            IEntityType entityType,
+            object entity)
+        {
+            StateManager.StartTrackingFromQuery(entityType, entity, ValueBuffer.Empty, handledForeignKeys: null);
         }
 
         /// <summary>

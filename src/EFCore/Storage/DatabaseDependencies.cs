@@ -3,6 +3,7 @@
 
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.EntityFrameworkCore.Query.PipeLine;
 using Microsoft.EntityFrameworkCore.Utilities;
 
 namespace Microsoft.EntityFrameworkCore.Storage
@@ -40,17 +41,21 @@ namespace Microsoft.EntityFrameworkCore.Storage
         ///     </para>
         /// </summary>
         /// <param name="queryCompilationContextFactory"> Factory for compilation contexts to process LINQ queries. </param>
-        public DatabaseDependencies([NotNull] IQueryCompilationContextFactory queryCompilationContextFactory)
+        /// <param name="queryCompilationContextFactory2"> A </param>
+        public DatabaseDependencies([NotNull] IQueryCompilationContextFactory queryCompilationContextFactory,
+            IQueryCompilationContextFactory2 queryCompilationContextFactory2)
         {
             Check.NotNull(queryCompilationContextFactory, nameof(queryCompilationContextFactory));
 
             QueryCompilationContextFactory = queryCompilationContextFactory;
+            QueryCompilationContextFactory2 = queryCompilationContextFactory2;
         }
 
         /// <summary>
         ///     Factory for compilation contexts to process LINQ queries.
         /// </summary>
         public IQueryCompilationContextFactory QueryCompilationContextFactory { get; }
+        public IQueryCompilationContextFactory2 QueryCompilationContextFactory2 { get; }
 
         /// <summary>
         ///     Clones this dependency parameter object with one service replaced.
@@ -60,6 +65,11 @@ namespace Microsoft.EntityFrameworkCore.Storage
         /// </param>
         /// <returns> A new parameter object with the given service replaced. </returns>
         public DatabaseDependencies With([NotNull] IQueryCompilationContextFactory queryCompilationContextFactory)
-            => new DatabaseDependencies(Check.NotNull(queryCompilationContextFactory, nameof(queryCompilationContextFactory)));
+            => new DatabaseDependencies(Check.NotNull(queryCompilationContextFactory, nameof(queryCompilationContextFactory)),
+                QueryCompilationContextFactory2);
+
+        public DatabaseDependencies With([NotNull] IQueryCompilationContextFactory2 queryCompilationContextFactory2)
+            => new DatabaseDependencies(QueryCompilationContextFactory,
+                Check.NotNull(queryCompilationContextFactory2, nameof(queryCompilationContextFactory2)));
     }
 }
