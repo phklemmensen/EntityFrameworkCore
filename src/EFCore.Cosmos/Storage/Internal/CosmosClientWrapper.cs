@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.EntityFrameworkCore.Cosmos.Storage.Internal
@@ -29,7 +30,15 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Storage.Internal
         private readonly Dictionary<string, CosmosItems> _items = new Dictionary<string, CosmosItems>();
         private readonly IExecutionStrategyFactory _executionStrategyFactory;
         private readonly IDiagnosticsLogger<DbLoggerCategory.Database.Command> _commandLogger;
+
         private static readonly string _userAgent = " Microsoft.EntityFrameworkCore.Cosmos/" + ProductInfo.GetVersion();
+        public static readonly JsonSerializer Serializer = new JsonSerializer();
+
+        static CosmosClientWrapper()
+        {
+            Serializer.Converters.Add(new ByteArrayConverter());
+            Serializer.DateFormatHandling = DateFormatHandling.IsoDateFormat;
+        }
 
         public CosmosClientWrapper(
             [NotNull] IDbContextOptions dbContextOptions,
@@ -50,7 +59,8 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Storage.Internal
             ?? (_client = new CosmosClient(
                 new CosmosConfiguration(_endPoint, _authKey)
                 {
-                    UserAgentSuffix = _userAgent
+                    UserAgentSuffix = _userAgent,
+                    ConnectionMode = ConnectionMode.Direct
                 }));
 
         public bool CreateDatabaseIfNotExists()

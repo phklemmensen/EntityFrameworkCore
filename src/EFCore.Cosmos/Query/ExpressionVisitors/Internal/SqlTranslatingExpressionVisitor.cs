@@ -157,5 +157,14 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.Query.ExpressionVisitors.Internal
 
             return newExpression;
         }
+
+        protected override Expression VisitUnary(UnaryExpression node)
+        {
+            var newOperand = Visit(node.Operand);
+            return node.NodeType == ExpressionType.Convert
+                   && newOperand?.Type == node.Type
+                ? newOperand
+                : node.Update(newOperand);
+        }
     }
 }

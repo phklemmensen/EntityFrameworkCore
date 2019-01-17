@@ -167,6 +167,11 @@ User.Id ---> [uniqueidentifier]
             Assert.Equal(expected, actual, ignoreLineEndingDifferences: true);
         }
 
+        public override void Can_insert_and_read_back_with_string_key()
+        {
+            base.Can_insert_and_read_back_with_string_key();
+        }
+
         public class CustomConvertersSqlServerFixture : CustomConvertersFixtureBase
         {
             public override bool StrictEquality => true;

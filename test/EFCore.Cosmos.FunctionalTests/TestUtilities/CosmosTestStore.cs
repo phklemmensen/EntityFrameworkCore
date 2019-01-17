@@ -69,6 +69,9 @@ namespace Microsoft.EntityFrameworkCore.Cosmos.TestUtilities
 
         private async Task CreateFromFile(DbContext context)
         {
+            // TODO: Remove when EnsureCreatedAsync returns correct result
+            await context.Database.EnsureDeletedAsync();
+
             if (await context.Database.EnsureCreatedAsync())
             {
                 var cosmosClient = context.GetService<CosmosClientWrapper>();
